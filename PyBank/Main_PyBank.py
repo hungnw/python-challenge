@@ -10,8 +10,7 @@ with open(path) as budget:
     header = next(csvreader)
 
     line_1 = next(csvreader)
-
-
+    
     month = 1
     total = int(line_1[1])
 

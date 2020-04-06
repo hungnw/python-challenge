@@ -15,7 +15,6 @@ with open(path) as file:
     percents = []
     vote_count_by_candidate = []
 
-
     for row in csvreader:
         
         #Get total votes count
@@ -40,7 +39,6 @@ with open(path) as file:
 
     #Get the highest vote number:
     h = max(vote_count_by_candidate)
-
 
     #Get the index of the highest vote:
     i = vote_count_by_candidate.index(h)

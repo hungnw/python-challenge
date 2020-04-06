@@ -1,71 +1,74 @@
-import csv
 import os
+import csv
 
-path = os.path.join("Resources", "election_data.csv")
+path = os.path.join("Resources","election_data.csv")
 
-with open(path, newline='') as csvfile:
-    csvreader = csv.reader(csvfile, delimiter=",")
+with open(path) as file:
+    csvreader = csv.reader(file)
+    next(csvreader)
 
-    candidates = []
-    votes = []
-    vote_percent = []
+    total_votes_count = 0
     
-    total_votes = 0
+    all_names_voted = []
 
-    winner = ""
-        
-    next(csvreader, None)
+    unique_names = []
+    percents = []
+    vote_count_by_candidate = []
+
+
     for row in csvreader:
-        if row[-1] not in candidates:
-            candidates.append(row[-1])
-            votes.append(1)
-        else:
-            index = candidates.index(row[-1])
-            votes[index] += 1
-        total_votes += 1
-    
-    for v in votes:
-        percent = "{0:.3f}".format(round((v/total_votes)*100, 2))
-        vote_percent.append(percent) 
         
-    winner_index = vote_percent.index(max(vote_percent))
-    winner = candidates[winner_index]
-            
+        #Get total votes count
+        total_votes_count +=1
+    
+        #List out unique candidate names:
+        if row[2] not in unique_names:
+            unique_names.append(row[2])
+
+        #List out all names voted:
+        all_names_voted.append(row[2])
+
+    for i in unique_names:
+        
+        #List out total votes of each candidate:
+        x = all_names_voted.count(i)
+        vote_count_by_candidate.append(x)
+
+        #List out each candidate's percentage of all votes:
+        p = x / total_votes_count * 100
+        percents.append(p)
+
+    #Get the highest vote number:
+    h = max(vote_count_by_candidate)
+
+
+    #Get the index of the highest vote:
+    i = vote_count_by_candidate.index(h)
+
+    #Get the winner's name:
+    winner = unique_names[i]
 
     print('Election Results')
-    print('-------------------------')
-    print(f'Total votes: {total_votes}')
-    print('-------------------------')
-    print(f'{candidates[0]} : {vote_percent[0]} % ({votes[0]})')
-    print(f'{candidates[1]} : {vote_percent[1]} % ({votes[1]})')
-    print(f'{candidates[2]} : {vote_percent[2]} % ({votes[2]})')
-    print(f'{candidates[3]} : {vote_percent[3]} % ({votes[3]})')
-    print('-------------------------')
+    print('---------------------------------')
+    print(f'Total Votes: {total_votes_count}')
+    print('---------------------------------')
+
+    for i in range(len(unique_names)):
+        print(f'{unique_names[i]} {percents[i]:.3f}% ({vote_count_by_candidate[i]})')
+    
+    print('---------------------------------')
     print(f'Winner: {winner}')
 
-txt = open('election_results.txt', 'w')
+#Export to txt file:
+with open("Election Result.txt", "w") as text:
+    text.write('Election Results')
+    text.write('\n---------------------------------')
+    text.write(f'\nTotal Votes: {total_votes_count}')
+    text.write('\n---------------------------------')
 
-txt.write('Election Results')
-txt.write("\n")
-txt.write('-------------------------')
-txt.write("\n")
-txt.write('Total votes: {total_votes}')
-txt.write("\n")
-txt.write('-------------------------')
-txt.write("\n")
-txt.write(f'{candidates[0]} : {vote_percent[0]} % ({votes[0]})')
-txt.write("\n")
-txt.write(f'{candidates[1]} : {vote_percent[1]} % ({votes[1]})')
-txt.write("\n")
-txt.write(f'{candidates[2]} : {vote_percent[2]} % ({votes[2]})')
-txt.write("\n")
-txt.write(f'{candidates[3]} : {vote_percent[3]} % ({votes[3]})')
-txt.write("\n")
-txt.write('-------------------------')
-txt.write("\n")
-txt.write(f'Winner: {winner}')
-
-txt.close()
-
-
-
+    for i in range(len(unique_names)):
+        text.write(f'\n{unique_names[i]} {percents[i]:.3f}% ({vote_count_by_candidate[i]})')
+    
+    text.write('\n---------------------------------')
+    text.write(f'\nWinner: {winner}')
+    text.write('\n---------------------------------')
